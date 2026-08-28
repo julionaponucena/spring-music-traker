@@ -1,0 +1,27 @@
+# Stage 1: Build
+FROM gradle:9.5.1-jdk21-alpine AS builder
+
+WORKDIR /app
+
+# Copie apenas os arquivos necessários para o build
+COPY build.gradle settings.gradle ./
+COPY src ./src
+
+# Gere o JAR (o bootJar já resolve e baixa as dependências/plugins antes de compilar)
+RUN gradle bootJar --no-daemon --stacktrace
+
+# Stage 2: Run
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+RUN addgroup -g 1000 appuser && adduser -D -u 1000 -G appuser appuser
+
+COPY --from=builder /app/build/libs/spring-teste-0.0.1-SNAPSHOT.jar app.jar
+RUN chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+    CMD wget -q -O /dev/null http://localhost:8080/actuator/health || exit 1
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

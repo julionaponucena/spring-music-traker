@@ -1,0 +1,12 @@
+HELP.md
+.gradle
+build/
+.idea
+*.iml
+*.db
+.git
+.gitignore
+.docker
+docker-compose.yml
+Dockerfile
+gradle/wrapper/gradle-wrapper.jar
