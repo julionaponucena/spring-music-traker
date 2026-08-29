@@ -6,6 +6,7 @@ import com.example.springteste.modules.moments.models.Moment;
 import com.example.springteste.modules.moments.repositories.MomentRepository;
 import com.example.springteste.modules.musics.converters.MusicConversor;
 import com.example.springteste.modules.musics.dtos.CreateMusicDTO;
+import com.example.springteste.modules.musics.dtos.shared.BandRefDTO;
 import com.example.springteste.modules.musics.dtos.FindMusicDTO;
 import com.example.springteste.modules.musics.dtos.ListMusicDTO;
 import com.example.springteste.modules.musics.dtos.UpdateMusicDTO;
@@ -30,8 +31,7 @@ public class MusicService {
     public void createMusic(CreateMusicDTO musicDTO) {
         final Music music = musicConversor.fromCreateMusicDTO(musicDTO);
 
-        final Band band = getBand(musicDTO.band().id());
-
+        final Band band = getBand(musicDTO.band());
 
         final List<Moment> moments = getMoment(musicDTO.momentIds());
 
@@ -45,8 +45,11 @@ public class MusicService {
         musicRepository.save(music);
     }
 
-    private Band getBand(int id) {
-        return bandRepository.findById(id)
+    private Band getBand(BandRefDTO band) {
+        if (band == null) {
+            throw new IllegalArgumentException("Banda é obrigatória");
+        }
+        return bandRepository.findById(band.id())
                 .orElseThrow();
     }
 
@@ -63,7 +66,9 @@ public class MusicService {
         final Music music = musicRepository.findById(musicDTO.id())
                 .orElseThrow();
 
-        final Band band = getBand(musicDTO.band().id());
+        music.setName(musicDTO.name());
+
+        final Band band = getBand(musicDTO.band());
 
         music.setBand(band);
         music.setMoments(getMoment(musicDTO.momentIds()));

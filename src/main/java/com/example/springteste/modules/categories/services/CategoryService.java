@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -44,14 +43,14 @@ public class CategoryService {
     public CategoryDTO findById(int id) {
         final Category category = categoryRepository.findById(id).orElseThrow();
 
-//        List<Moment> moments = category.getMoments();
-
         return convertToDTO(category);
     }
 
     private static CategoryDTO convertToDTO(Category category) {
         final List<CategoryDTO.MomentDTO>
-                momentDTOS =category.getMoments().stream().map(CategoryService::convertToMomentDTO).toList();
+                momentDTOS = category.getMoments() != null
+                    ? category.getMoments().stream().map(CategoryService::convertToMomentDTO).toList()
+                    : List.of();
 
         return new CategoryDTO(category.getId(), category.getName(),category.getValue(), momentDTOS);
     }
@@ -60,7 +59,7 @@ public class CategoryService {
         return new CategoryDTO.MomentDTO(moment.getId(), moment.getName());
     }
 
-    public Category create(CreateCategoryDTO dto) {
+    public CategoryDTO create(CreateCategoryDTO dto) {
         Category category = new Category();
         category.setName(dto.getName());
         category.setValue(dto.getValue());
@@ -72,10 +71,10 @@ public class CategoryService {
             category.setMoments(moments);
         }
 
-        return categoryRepository.save(category);
+        return convertToDTO(categoryRepository.save(category));
     }
 
-    public Category update(UpdateCategoryDTO dto) {
+    public CategoryDTO update(UpdateCategoryDTO dto) {
         Category category = categoryRepository.findById(dto.getId()).orElseThrow();
         category.setName(dto.getName());
         category.setValue(dto.getValue());
@@ -89,7 +88,7 @@ public class CategoryService {
             category.setMoments(null);
         }
 
-        return categoryRepository.save(category);
+        return convertToDTO(categoryRepository.save(category));
     }
 
     public void delete(int id) {

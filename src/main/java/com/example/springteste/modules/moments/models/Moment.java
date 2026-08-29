@@ -20,19 +20,9 @@ public class Moment {
     private int id;
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-        name = "moments_categories",
-        joinColumns = @JoinColumn(name = "moment_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
+    @ManyToMany(mappedBy = "moments")
     private List<Category> categories;
 
-    @ManyToMany
-    @JoinTable(
-        name = "moments_musics",
-        joinColumns = @JoinColumn(name = "moment_id"),
-        inverseJoinColumns = @JoinColumn(name = "music_id")
-    )
-    private  List<Music> musics;
+    @ManyToMany(mappedBy = "moments")
+    private List<Music> musics;
 }

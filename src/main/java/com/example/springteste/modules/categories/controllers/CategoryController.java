@@ -3,7 +3,6 @@ package com.example.springteste.modules.categories.controllers;
 import com.example.springteste.modules.categories.dto.CategoryDTO;
 import com.example.springteste.modules.categories.dto.CreateCategoryDTO;
 import com.example.springteste.modules.categories.dto.UpdateCategoryDTO;
-import com.example.springteste.modules.categories.models.Category;
 import com.example.springteste.modules.categories.services.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +27,12 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category save(@RequestBody CreateCategoryDTO dto) {
+    public CategoryDTO save(@RequestBody CreateCategoryDTO dto) {
         return categoryService.create(dto);
     }
 
     @PutMapping
-    public Category update(@RequestBody UpdateCategoryDTO dto) {
+    public CategoryDTO update(@RequestBody UpdateCategoryDTO dto) {
         return categoryService.update(dto);
     }
 

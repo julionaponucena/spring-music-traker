@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: springteste-postgres
+#    container_name: springteste-postgres
     environment:
       POSTGRES_DB: springteste
       POSTGRES_USER: postgres
@@ -14,19 +14,19 @@ services:
       timeout: 5s
       retries: 10
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile-prd
-    container_name: springteste-app
-    image: spring-teste-prd:latest
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/springteste
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile-prd
+#    container_name: springteste-app
+#    image: spring-teste-prd:latest
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/springteste
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    restart: unless-stopped

@@ -40,7 +40,8 @@ public class MomentService {
     }
 
     public void update(UpdateMomentDTO dto) {
-        final Moment moment = this.conversor.toEntity(dto);
+        final Moment moment = this.repository.findById(dto.id()).orElseThrow();
+        moment.setName(dto.name());
 
         this.repository.save(moment);
     }
